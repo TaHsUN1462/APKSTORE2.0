@@ -13,11 +13,8 @@
 body {
   font-family: sans-serif;
   background: #f6f6f6;
-  max-width: 480px;
   margin: 0 auto;
   padding: 20px;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 #search {
