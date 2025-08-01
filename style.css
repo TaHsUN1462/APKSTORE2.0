@@ -1,0 +1,301 @@
+/* Reset margin, padding, and set box-sizing */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  outline: none;
+  transition: 200ms ease all;
+  border: none;
+}
+
+body {
+  font-family: sans-serif;
+  background: #f6f6f6;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 20px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#search {
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+}
+
+.app {
+  display: flex;
+  border: 1px solid #ccc;
+  align-items: center;
+  gap: 10px;
+  background: #fff;
+  padding: 10px;
+  margin-bottom: 5px;
+  border-radius: 10px;
+  
+  transition: transform 0.3s ease-in-out;
+}
+
+.app:hover {
+  transform: translateX(10px);
+}
+
+.app img {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+#apppage {
+  position: relative;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  transition: opacity 0.3s ease;
+  width: 100%;
+  padding-top: 60px;
+  border: 1px solid #ccc;
+}
+
+#apppage img {
+  width: 80px;
+  height: 80px;
+  border-radius: 20px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+/* Forms */
+form {
+  background: #fff;
+  padding: 15px 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
+}
+
+form h3 {
+  margin-bottom: 15px;
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+form input[type="text"],
+form textarea,
+form input[type="file"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  resize: vertical;
+}
+
+form textarea {
+  min-height: 80px;
+}
+
+form button {
+  background-color: #007bff;
+  color: white;
+  font-weight: 600;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  
+  font-size: 1rem;
+  margin-right: 10px;
+  transition: background-color 0.3s ease;
+}
+
+form button:hover {
+  background-color: #0056b3;
+}
+
+form button[type="button"] {
+  background-color: #6c757d;
+}
+
+form button[type="button"]:hover {
+  background-color: #5a6268;
+}
+form label{
+  width: 100%;
+  text-align: left;
+}
+form button[type="button"]{
+  justify-self: flex-start;
+  background: #28a745;
+}
+/* Log box */
+#log {
+  background: #222;
+  color: #0f0;
+  font-family: monospace;
+  padding: 12px 16px;
+  border-radius: 10px;
+  min-height: 60px;
+  margin-bottom: 20px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 0.9rem;
+}
+
+/* Table styles */
+#appsTable {
+  width: 600px;
+  max-width: 100%;
+  overflow-x: auto;
+  display: block;
+  border-radius: 10px;
+  box-sizing: border-box;
+}
+
+thead {
+  background-color: #007bff;
+  color: white;
+}
+
+thead th {
+  padding: 12px 10px;
+  font-weight: 600;
+  text-align: left;
+  font-size: 1rem;
+}
+
+tbody tr {
+  border-bottom: 1px solid #ddd;
+  transition: background-color 0.3s ease;
+}
+
+tbody tr:hover {
+  background-color: #f1faff;
+}
+
+tbody td {
+  padding: 10px;
+  vertical-align: middle;
+  font-size: 0.95rem;
+}
+
+tbody td img {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.editBtn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  margin-right: 6px;
+  border-radius: 6px;
+  width: 100%;
+  font-size: 0.9rem;
+  transition: background-color 0.3s ease;
+}
+
+.editBtn:hover {
+  background-color: #0056b3;
+}
+
+.deleteBtn {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  margin-right: 6px;
+  border-radius: 6px;
+  width: 100%;
+  font-size: 0.9rem;
+  transition: background-color 0.3s ease;
+}
+
+.deleteBtn:hover {
+  background-color: #a71d2a;
+}
+
+.table-wrapper {
+  max-width: 100%;
+  overflow-x: auto;
+  border-radius: 10px;
+  border: 1px solid #000;
+  padding: 10px;
+}
+
+/* WebKit */
+.table-wrapper::-webkit-scrollbar {
+  height: 8px;
+}
+
+.table-wrapper::-webkit-scrollbar-track {
+  background: #eee;
+  border-radius: 10px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+  background: #007bff;
+  border-radius: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #0056b3;
+}
+
+/* Firefox */
+.table-wrapper {
+  scrollbar-width: thin;
+  scrollbar-color: #007bff #eee;
+}
+
+
+.back{
+  position: absolute;
+  left: 10px;
+  width: 40px;
+  top: 10px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #007bff;
+  border: none;
+  outline: none;
+  border-radius: 5px;
+  color: white;
+}
+img{
+  border: 1px solid #ccc;
+}
+.download-btn{
+  padding: .8rem .75rem;
+  background: #28a745;
+  border-radius: 5px;
+  color: white;
+}
+.download-btn:active{
+  background: #218838;
+}

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Upload App</title>
+  <link rel="stylesheet" href="style.css" type="text/css" media="all" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+</head>
+<body>
+<form id="appForm">
+  <h3>Upload New App</h3>
+
+  <label>App Name:</label>
+  <input type="text" name="name" placeholder="App Name" required>
+
+  <label>Description:</label>
+  <textarea name="description" placeholder="Description"></textarea>
+
+  <label>Icon:</label>
+  <input type="file" name="icon" accept="image/*" required style="display:none" id="iconInput" onchange="document.getElementById('iconName').textContent = this.files[0]?.name || 'No file chosen'">
+  <button type="button" onclick="document.getElementById('iconInput').click()">Choose Icon</button>
+  <span id="iconName">No file chosen</span>
+
+  <label>APK File:</label>
+  <input type="file" name="apk" accept=".apk" required style="display:none" id="apkInput" onchange="document.getElementById('apkName').textContent = this.files[0]?.name || 'No file chosen'">
+  <button type="button" onclick="document.getElementById('apkInput').click()">Choose APK</button>
+  <span id="apkName">No file chosen</span>
+
+  <button type="submit">Upload</button>
+</form>
+
+<form id="editForm" style="display:none">
+  <h3>Edit App</h3>
+
+  <input type="hidden" name="id">
+
+  <label>App Name:</label>
+  <input type="text" name="name" placeholder="App Name" required>
+
+  <label>Description:</label>
+  <textarea name="description" placeholder="Description"></textarea>
+
+  <label>New Icon (optional):</label>
+  <input type="file" name="icon" accept="image/*" style="display:none" id="editIconInput" onchange="document.getElementById('editIconName').textContent = this.files[0]?.name || 'No file chosen'">
+  <button type="button" onclick="document.getElementById('editIconInput').click()">Choose Icon</button>
+  <span id="editIconName">No file chosen</span>
+
+  <label>New APK (optional):</label>
+  <input type="file" name="apk" accept=".apk" style="display:none" id="editApkInput" onchange="document.getElementById('editApkName').textContent = this.files[0]?.name || 'No file chosen'">
+  <button type="button" onclick="document.getElementById('editApkInput').click()">Choose APK</button>
+  <span id="editApkName">No file chosen</span>
+
+  <button type="submit">Save Changes</button>
+  <button type="button" onclick="cancelEdit()">Cancel</button>
+</form>
+
+  <div id="log"></div>
+  <div class="table-wrapper">
+  <table id="appsTable">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Icon</th>
+        <th>APK</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  </div>
+
+<script>
+  const supa = supabase.createClient(
+    "https://vflvhmdpsivnrenuqgzs.supabase.co",
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZmbHZobWRwc2l2bnJlbnVxZ3pzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM5ODEyMzcsImV4cCI6MjA2OTU1NzIzN30.lxCXZaqZm2aWzmyDWBNc5CEhYtb-6lxn_zvECVv6t8c"
+  );
+
+  const logDiv = document.getElementById("log");
+  const appsTableBody = document.querySelector("#appsTable tbody");
+
+  function log(msg) {
+    logDiv.textContent += msg + "\n";
+  }
+
+  async function loadApps() {
+    log("Loading apps...");
+    const { data, error } = await supa.from("apps").select("*").order("id", { ascending: false });
+    if (error) {
+      log("Failed to load apps: " + error.message);
+      return;
+    }
+    appsTableBody.innerHTML = "";
+    data.forEach(app => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${app.name}</td>
+        <td>${app.description || ""}</td>
+        <td><img src="${app.icon_url}" width="40" height="40" /></td>
+        <td><a href="${app.apk_url}" target="_blank">Download</a></td>
+        <td>
+          <button class="editBtn" data-id="${app.id}">Edit</button>
+          <button class="deleteBtn" data-id="${app.id}">Delete</button>
+        </td>
+      `;
+      appsTableBody.appendChild(tr);
+    });
+  }
+
+  document.getElementById("appForm").onsubmit = async function (e) {
+    e.preventDefault();
+    const form = e.target;
+    const name = form.name.value.trim();
+    const description = form.description.value.trim();
+    const icon = form.icon.files[0];
+    const apk = form.apk.files[0];
+
+    if (!name || !icon || !apk) return alert("All fields required");
+
+    const t = Date.now();
+    const iconPath = `uploads/${t}_${icon.name}`;
+    const apkPath = `uploads/${t}_${apk.name}`;
+
+    log("Uploading icon...");
+    const iconRes = await supa.storage.from("apkstore").upload(iconPath, icon);
+    if (iconRes.error) return alert("Icon upload failed: " + iconRes.error.message);
+    log("Icon uploaded");
+
+    log("Uploading APK...");
+    const apkRes = await supa.storage.from("apkstore").upload(apkPath, apk);
+    if (apkRes.error) return alert("APK upload failed: " + apkRes.error.message);
+    log("APK uploaded");
+
+    const iconUrl = supa.storage.from("apkstore").getPublicUrl(iconPath).data.publicUrl;
+    const apkUrl = supa.storage.from("apkstore").getPublicUrl(apkPath).data.publicUrl;
+
+    log("Inserting into database...");
+    const dbRes = await supa.from("apps").insert([{ name, description, icon_url: iconUrl, apk_url: apkUrl }]);
+    if (dbRes.error) return alert("Insert failed: " + dbRes.error.message);
+
+    log("✅ Uploaded");
+    form.reset();
+    loadApps();
+  };
+
+  async function deleteApp(id) {
+    if (!confirm("Delete this app?")) return;
+    log("Deleting app...");
+    const { error } = await supa.from("apps").delete().eq("id", id);
+    if (error) return alert("Delete failed: " + error.message);
+    loadApps();
+  }
+
+  async function startEdit(id) {
+    const { data, error } = await supa.from("apps").select("*").eq("id", id).single();
+    if (error) return alert("Load failed");
+
+    const form = document.getElementById("editForm");
+    form.id.value = data.id;
+    form.name.value = data.name;
+    form.description.value = data.description || "";
+    form.style.display = "flex";
+    document.getElementById("appForm").style.display = "none";
+  }
+
+  function cancelEdit() {
+    document.getElementById("editForm").reset();
+    document.getElementById("editForm").style.display = "none";
+    document.getElementById("appForm").style.display = "flex";
+  }
+
+  document.getElementById("editForm").onsubmit = async function (e) {
+    e.preventDefault();
+    const form = e.target;
+    const id = form.id.value;
+    const name = form.name.value.trim();
+    const description = form.description.value.trim();
+    const icon = form.icon.files[0];
+    const apk = form.apk.files[0];
+
+    let iconUrl, apkUrl;
+    const t = Date.now();
+
+    if (icon) {
+      const iconPath = `uploads/${t}_${icon.name}`;
+      const iconRes = await supa.storage.from("apkstore").upload(iconPath, icon);
+      if (iconRes.error) return alert("Icon upload failed: " + iconRes.error.message);
+      iconUrl = supa.storage.from("apkstore").getPublicUrl(iconPath).data.publicUrl;
+    }
+
+    if (apk) {
+      const apkPath = `uploads/${t}_${apk.name}`;
+      const apkRes = await supa.storage.from("apkstore").upload(apkPath, apk);
+      if (apkRes.error) return alert("APK upload failed: " + apkRes.error.message);
+      apkUrl = supa.storage.from("apkstore").getPublicUrl(apkPath).data.publicUrl;
+    }
+
+    const updateData = { name, description };
+    if (iconUrl) updateData.icon_url = iconUrl;
+    if (apkUrl) updateData.apk_url = apkUrl;
+
+    log("Updating app...");
+    const res = await supa.from("apps").update(updateData).eq("id", id);
+    if (res.error) return alert("Update failed: " + res.error.message);
+
+    log("✅ Updated");
+    cancelEdit();
+    loadApps();
+  };
+
+  appsTableBody.onclick = function(e) {
+    if (e.target.classList.contains("editBtn")) {
+      startEdit(e.target.dataset.id);
+    }
+    if (e.target.classList.contains("deleteBtn")) {
+      deleteApp(e.target.dataset.id);
+    }
+  };
+
+  loadApps();
+</script>
+</body>
+</html>

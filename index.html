@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>App List</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+</head>
+<body>
+
+  <div id="app">
+    <input autocapitalize="off" type="text" id="search" placeholder="Search apps...">
+    <div id="apps"></div>
+
+    <div id="apppage">
+      <button class="back" onclick="back()"><svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" height="1.5em" width="1.5em"><path fill="currentColor" d="m22.35 38.95-13.9-13.9q-.25-.25-.35-.5Q8 24.3 8 24q0-.3.1-.55.1-.25.35-.5L22.4 9q.4-.4 1-.4t1.05.45q.45.45.45 1.05 0 .6-.45 1.05L13.1 22.5h24.8q.65 0 1.075.425.425.425.425 1.075 0 .65-.425 1.075-.425.425-1.075.425H13.1l11.4 11.4q.4.4.4 1t-.45 1.05q-.45.45-1.05.45-.6 0-1.05-.45Z"/></svg></button>
+      <img id="icon">
+      <h2 id="title"></h2>
+      <p id="desc"></p>
+      <a id="apk" target="_blank"><button class="download-btn">Download</button></a>
+    </div>
+  </div>
+
+  <script>
+  const supa = supabase.createClient(
+    "https://vflvhmdpsivnrenuqgzs.supabase.co",
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZmbHZobWRwc2l2bnJlbnVxZ3pzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM5ODEyMzcsImV4cCI6MjA2OTU1NzIzN30.lxCXZaqZm2aWzmyDWBNc5CEhYtb-6lxn_zvECVv6t8c"
+  );
+
+    const appsDiv = document.getElementById("apps");
+    const search = document.getElementById("search");
+    const appPage = document.getElementById("apppage");
+
+    async function loadApps() {
+      const { data, error } = await supa.from("apps").select("*");
+      if (error) return console.error("Fetch error:", error.message);
+
+      appsDiv.innerHTML = "";
+      data.forEach(app => {
+        const row = document.createElement("div");
+        row.className = "app";
+        row.innerHTML = `<img src="${app.icon_url}"><span>${app.name}</span>`;
+        row.onclick = () => showApp(app);
+        appsDiv.appendChild(row);
+      });
+    }
+
+    function showApp(app) {
+      search.style.display = "none";
+      appsDiv.style.display = "none";
+      appPage.style.display = "flex";
+      appPage.style.opacity = 0;
+      appPage.style.pointerEvents = "none";
+
+      icon.src = app.icon_url;
+      title.innerText = app.name;
+      desc.innerText = app.description;
+      apk.href = app.apk_url;
+
+      setTimeout(() => {
+        appPage.style.opacity = 1;
+        appPage.style.pointerEvents = "auto";
+      }, 50);
+    }
+
+    function back() {
+      appPage.style.opacity = 0;
+      appPage.style.pointerEvents = "none";
+      setTimeout(() => {
+        appPage.style.display = "none";
+        search.style.display = "block";
+        appsDiv.style.display = "block";
+      }, 200);
+    }
+search.addEventListener("input", searchApps);
+
+function searchApps() {
+  const query = search.value.trim().toLowerCase();
+  const apps = appsDiv.querySelectorAll(".app");
+
+  apps.forEach(app => {
+    const name = app.querySelector("span").innerText.toLowerCase();
+    app.style.display = name.startsWith(query) ? "flex" : "none";
+  });
+}
+    loadApps();
+  </script>
+</body>
+</html>
