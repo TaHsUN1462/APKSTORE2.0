@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
@@ -49,7 +49,7 @@
       data.forEach(app => {
         const row = document.createElement("div");
         row.className = "app";
-        row.innerHTML = `<img src="${app.icon_url}"><span>${app.name}</span>`;
+        row.innerHTML = `<img src="${app.icon_url}" alt="${app.name}"><span>${app.name}</span>`;
         row.onclick = () => showApp(app);
         appsDiv.appendChild(row);
       });
