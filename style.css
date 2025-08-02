@@ -299,6 +299,7 @@ img{
   background: #28a745;
   border-radius: 5px;
   color: white;
+  text-decoration: none;
 }
 .download-btn:active{
   background: #218838;
