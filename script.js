@@ -9,18 +9,23 @@
     const appPage = document.getElementById("apppage");
 
     async function loadApps() {
-      const { data, error } = await supa.from("apps").select("*");
-      if (error) return console.error("Fetch error:", error.message);
+  const { data, error } = await supa.from("apps").select("*");
+  if (error) return console.error("Fetch error:", error.message);
 
-      appsDiv.innerHTML = "";
-      data.forEach(app => {
-        const row = document.createElement("div");
-        row.className = "app";
-        row.innerHTML = `<img loading="lazy" src="${app.icon_url}" alt="${app.name}"><span>${app.name}</span>`;
-        row.onclick = () => showApp(app);
-        appsDiv.appendChild(row);
-      });
-    }
+  appsDiv.innerHTML = "";
+
+  for (let i = 0; i < data.length; i++) {
+    const app = data[i];
+
+    const row = document.createElement("div");
+    row.className = "app";
+    row.innerHTML = `<img loading="lazy" src="${app.icon_url}" alt="${app.name}"><span>${app.name}</span>`;
+    row.onclick = () => showApp(app);
+    appsDiv.appendChild(row);
+
+    await new Promise(res => setTimeout(res, 50)); // delay between rows (50ms)
+  }
+}
 
     function showApp(app) {
       search.style.opacity = "0";
