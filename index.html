@@ -2,7 +2,6 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
   <title>App List</title>
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
@@ -47,10 +46,12 @@
     }
 
     function showApp(app) {
-      search.style.display = "none";
-      appsDiv.style.display = "none";
+      search.style.opacity = "0";
+      search.style.pointerEvents = "none";
+      appsDiv.style.opacity = "0";
+      appsDiv.style.pointerEvents = "none";
       appPage.style.display = "flex";
-      appPage.style.opacity = 0;
+      appPage.style.transform = "translateX(120%)";
       appPage.style.pointerEvents = "none";
 
       icon.src = app.icon_url;
@@ -59,18 +60,20 @@
       apk.href = app.apk_url;
 
       setTimeout(() => {
-        appPage.style.opacity = 1;
+      appPage.style.transform = "translateX(0)";
         appPage.style.pointerEvents = "auto";
       }, 50);
     }
 
     function back() {
-      appPage.style.opacity = 0;
+      appPage.style.transform = "translateX(120%)";
       appPage.style.pointerEvents = "none";
       setTimeout(() => {
         appPage.style.display = "none";
-        search.style.display = "block";
-        appsDiv.style.display = "block";
+        search.style.opacity = "1";
+      search.style.pointerEvents = "auto";
+      appsDiv.style.opacity = "1";
+      appsDiv.style.pointerEvents = "auto";
       }, 200);
     }
 search.addEventListener("input", searchApps);
@@ -84,6 +87,7 @@ function searchApps() {
     app.style.display = name.startsWith(query) ? "flex" : "none";
   });
 }
+appsDiv.innerText = "Loading apps"
     loadApps();
   </script>
 </body>
