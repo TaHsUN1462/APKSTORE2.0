@@ -20,7 +20,10 @@ body {
   padding: 20px;
   overflow-x: hidden;
 }
-
+h2{
+  width: 100%;
+  text-align: center;
+}
 #search {
   width: 100%;
   padding: 10px;
