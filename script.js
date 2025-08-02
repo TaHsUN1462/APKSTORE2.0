@@ -16,7 +16,7 @@
       data.forEach(app => {
         const row = document.createElement("div");
         row.className = "app";
-        row.innerHTML = `<img src="${app.icon_url}" alt="${app.name}"><span>${app.name}</span>`;
+        row.innerHTML = `<img loading="lazy" src="${app.icon_url}" alt="${app.name}"><span>${app.name}</span>`;
         row.onclick = () => showApp(app);
         appsDiv.appendChild(row);
       });
