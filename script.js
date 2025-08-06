@@ -38,7 +38,7 @@
 
       icon.src = app.icon_url;
       title.innerText = app.name;
-      desc.innerText = app.description;
+      desc.innerHTML = app.description;
       apk.href = app.apk_url;
 
       setTimeout(() => {
