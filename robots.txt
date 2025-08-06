@@ -1,2 +1,4 @@
 User-agent: *
 Disallow: /admin.html
+Allow: /app.html
+Sitemap: https://apkstore-d57f.onrender.com/sitemap.xml
