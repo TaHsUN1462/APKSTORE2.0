@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Loading...</title>
+  <meta name="description" content="Downloading app..." />
+  <meta name="keywords" content="APK download, Android app, free APK, app store, safe download, Android games" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="" id="canonical" />
+
+  <!-- Open Graph for Facebook/WhatsApp -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Loading..." id="ogTitle" />
+  <meta property="og:description" content="Downloading app..." id="ogDesc" />
+  <meta property="og:image" content="" id="ogImage" />
+  <meta property="og:url" content="" id="ogUrl" />
+
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Loading..." id="twitterTitle" />
+  <meta name="twitter:description" content="Downloading app..." id="twitterDesc" />
+  <meta name="twitter:image" content="" id="twitterImage" />
+
+  <!-- Mobile + Branding -->
+  <meta name="theme-color" content="#ffffff" />
+<link rel="icon" type="image/png" href="/favicon.png" />
+<link rel="stylesheet" href="style.css" media="print" onload="this.media='all'">
+</head>
+<body>
+  <button class="back" onclick="history.back()">
+    <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" height="1.5em" width="1.5em"><path fill="currentColor" d="m22.35 38.95-13.9-13.9q-.25-.25-.35-.5Q8 24.3 8 24q0-.3.1-.55.1-.25.35-.5L22.4 9q.4-.4 1-.4t1.05.45q.45.45.45 1.05 0 .6-.45 1.05L13.1 22.5h24.8q.65 0 1.075.425.425.425.425 1.075 0 .65-.425 1.075-.425.425-1.075.425H13.1l11.4 11.4q.4.4.4 1t-.45 1.05q-.45.45-1.05.45-.6 0-1.05-.45Z"/></svg>
+  </button>
+  <div id="appList">
+    <img id="icon" width="100" />
+    <h1 id="title">Loading...</h1>
+    <p id="desc"></p>
+    <a id="apk" class="download-btn" target="_blank">Download</a>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script>
+
+    const supa = supabase.createClient(
+      "https://vflvhmdpsivnrenuqgzs.supabase.co",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZmbHZobWRwc2l2bnJlbnVxZ3pzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM5ODEyMzcsImV4cCI6MjA2OTU1NzIzN30.lxCXZaqZm2aWzmyDWBNc5CEhYtb-6lxn_zvECVv6t8c"
+    );
+    const params = new URLSearchParams(location.search);
+    const appName = params.get("app");
+
+    async function loadApp() {
+  if (!appName) return;
+
+  const { data, error } = await supa.from("apps").select("*").eq("name", appName).single();
+  if (error || !data) {
+    document.body.innerHTML = "<h1>App not found.</h1>";
+    return;
+  }
+
+  document.getElementById("icon").src = data.icon_url;
+  document.getElementById("title").innerText = data.name;
+  document.getElementById("desc").innerHTML = data.description;
+  document.getElementById("apk").href = data.apk_url;
+
+  const pageTitle = `${data.name} – Free APK Download`;
+  document.title = pageTitle;
+
+  document.querySelector('meta[name="description"]').content = data.description;
+  document.getElementById("canonical").setAttribute("href", location.href);
+
+  // Open Graph
+  document.getElementById("ogTitle").content = pageTitle;
+  document.getElementById("ogDesc").content = data.description;
+  document.getElementById("ogImage").content = data.icon_url;
+  document.getElementById("ogUrl").content = location.href;
+
+  // Twitter
+  document.getElementById("twitterTitle").content = pageTitle;
+  document.getElementById("twitterDesc").content = data.description;
+  document.getElementById("twitterImage").content = data.icon_url;
+}
+
+    loadApp();
+  </script>
+</body>
+</html>
