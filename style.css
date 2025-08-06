@@ -59,31 +59,6 @@ h2{
   flex-shrink: 0;
 }
 
-#apppage {
-  position: fixed;
-  left: 10px;
-  right: 10px;
-  top: 10px;
-  display: none;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  gap: 10px;
-  background: #fff;
-  padding: 20px;
-  border-radius: 10px;
-  transition: all 0.3s ease;
-  padding-top: 60px;
-  border: 1px solid #ccc;
-}
-
-#apppage img {
-  width: 80px;
-  height: 80px;
-  border-radius: 20px;
-  object-fit: cover;
-  flex-shrink: 0;
-}
 
 /* Forms */
 form {
@@ -309,4 +284,17 @@ img{
 }
 .download-btn:active{
   background: #218838;
+}
+#appList{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+#appList img{
+  width: 150px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
 }
