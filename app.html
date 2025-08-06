@@ -59,6 +59,7 @@
   }
 
   document.getElementById("icon").src = data.icon_url;
+  document.getElementById("icon").alt = data.name;
   document.getElementById("title").innerText = data.name;
   document.getElementById("desc").innerHTML = data.description;
   document.getElementById("apk").href = data.apk_url;
