@@ -206,7 +206,7 @@ tbody td img {
   background-color: #0056b3;
 }
 
-.deleteBtn {
+.deleteBtn, .deleteDownloadBtn {
   background-color: #dc3545;
   color: white;
   border: none;
@@ -218,7 +218,7 @@ tbody td img {
   transition: background-color 0.3s ease;
 }
 
-.deleteBtn:hover {
+.deleteBtn:hover  .deleteDownloadBtn:hover{
   background-color: #a71d2a;
 }
 
@@ -297,4 +297,7 @@ img{
   width: 150px;
   border: 1px solid #ccc;
   border-radius: 20px;
+}
+table{
+  width: 100%;
 }
