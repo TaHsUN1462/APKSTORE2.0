@@ -64,3 +64,4 @@ function checkWeb(){
     document.body.appendChild(error)
   }
 }
+checkWeb()
