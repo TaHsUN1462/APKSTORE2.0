@@ -50,3 +50,4 @@ function searchApps() {
 search.addEventListener("input", searchApps);
 appsDiv.innerText = "Loading apps";
 loadApps();
+console.log(window.location.href);
