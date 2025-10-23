@@ -64,4 +64,3 @@ function checkWeb(){
     document.body.appendChild(error)
   }
 }
-console.log(window.location.href);
