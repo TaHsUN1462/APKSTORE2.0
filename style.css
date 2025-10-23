@@ -303,4 +303,7 @@ table{
 }
 .error{
   position: fixed;
+  inset: 0;
+  background: white;
+  z-index: 200000;
 }
