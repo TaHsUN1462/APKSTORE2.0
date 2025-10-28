@@ -66,14 +66,32 @@
   const apkBtn = document.getElementById("apk");
 apkBtn.removeAttribute("href");
 apkBtn.onclick = async () => {
-  const name = prompt("Enter your name to continue download:");
-  if (!name) return;
+  const adContainer = document.createElement("div");
+  adContainer.innerHTML = `
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5736551427326158"
+      crossorigin="anonymous"></script>
+    <ins class="adsbygoogle"
+      style="display:block"
+      data-ad-client="ca-pub-5736551427326158"
+      data-ad-slot="9787112874"
+      data-ad-format="auto"
+      data-full-width-responsive="true"></ins>
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+  `;
+  document.body.appendChild(adContainer);
 
-  await supa.from("downloads").insert([
-    { name, app: data.name, created_at: new Date().toISOString() }
-  ]);
+  setTimeout(async () => {
+    const name = prompt("Enter your name to continue download:");
+    if (!name) return;
 
-  location.href = data.apk_url;
+    await supa.from("downloads").insert([
+      { name, app: data.name, created_at: new Date().toISOString() }
+    ]);
+
+    location.href = data.apk_url;
+  }, 1000); // wait 1s for ad to start loading
 };
 
   const pageTitle = `${data.name} – Free APK Download`;
