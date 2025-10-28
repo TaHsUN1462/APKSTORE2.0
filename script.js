@@ -51,7 +51,7 @@ search.addEventListener("input", searchApps);
 appsDiv.innerText = "Loading apps";
 loadApps();
 function checkWeb(){
-  if (window.location.href.includes("d57f")) {
+  if (!window.location.href.includes("d57f")) {
     let error = document.createElement("div");
     error.className = "error";
     error.innerHTML = `
